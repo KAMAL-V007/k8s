@@ -2,7 +2,7 @@ kind: Job
 apiVersion: batch/v1
 metadata:
   name: demo-job
-  namespace: nginx
+  namespace: nginx2
 
 spec:
   completions: 1

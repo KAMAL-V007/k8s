@@ -2,7 +2,7 @@ kind: CronJob
 apiVersion: batch/v1
 metadata:
   name: min-backup
-  namespace: nginx
+  namespace: nginx2
 spec:
   schedule: "* * * * *"
   jobTemplate:
