@@ -1,0 +1,28 @@
+kind: ReplicaSets
+apiVersion: apps/v1
+metadata:
+  name: nginx-replicasets
+  namespace: nginx
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx
+  
+  # The "template" defines the pod that will be created
+  template:
+    metadata:
+      name: nginx-replicas-pod
+      # We removed the "name:" field from here.
+      # The labels are what's important for the selector.
+      labels:
+        app: nginx
+    
+    # This "spec" belongs to the pod template.
+    # It was indented correctly to be inside "template".
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80

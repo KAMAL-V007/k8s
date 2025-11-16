@@ -1,0 +1,47 @@
+kind: CronJob
+apiVersion: batch/v1
+metadata:
+  name: min-backup
+  namespace: nginx
+spec:
+  schedule: "* * * * *"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          name: miniute-backup
+          labels:
+            app: minute-backup
+        spec:
+          # vvv 'containers' STARTS HERE vvv
+          containers:
+            - name: backup-container
+              image: busybox
+              command:
+                - sh
+                - -c
+                - >
+                  echo "Backup started";
+                  mkdir -p /backups &&
+                  mkdir -p /demo-data &&
+                  cp -r /demo-data /backups &&
+                  echo "Backup complete";
+              # 'volumeMounts' must be INSIDE the container block
+              volumeMounts:
+                - name: data-volume
+                  mountPath: /demo-data
+                - name: backup-volume
+                  mountPath: /backups
+          # ^^^ 'containers' ENDS HERE ^^^
+
+          # 'restartPolicy' and 'volumes' must be at the SAME level as 'containers'
+          restartPolicy: OnFailure
+          volumes:
+            - name: data-volume
+              hostPath:
+                path: /demo-data
+                type: DirectoryOrCreate
+            - name: backup-volume
+              hostPath:
+                path: /backups
+                type: DirectoryOrCreate
